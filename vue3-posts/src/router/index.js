@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import AboutView from '@/views/AboutView.vue';
 import PostCreateView from '@/views/posts/PostCreateView.vue';
@@ -74,7 +78,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory('/'),
+  history: createWebHistory(),
+  // history: createWebHashHistory(), // 내부적으로 전달되는 실제 URL 앞에 해시 문자(#)를 사용. URL의 이 섹션은 서버로 전송되지 않으므로 서버 수준에서 특별한 처리가 필요하지 않음. 그러나 SEO에 나쁜 영향을 미침
   routes,
 });
 
