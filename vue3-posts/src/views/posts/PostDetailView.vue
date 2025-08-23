@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>{{ form.title }}</h2>
-    <p>{{ form.content }}</p>
-    <p class="text-muted">{{ form.createAt }}</p>
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <p class="text-muted">{{ post.createAt }}</p>
     <hr class="my-4" />
     <div class="row g-2">
       <div class="col-auto">
@@ -16,10 +16,12 @@
         <button class="btn btn-outline-dark" @click="goListPage">목록</button>
       </div>
       <div class="col-auto">
-        <button class="btn btn-outline-primary" @click="goEditPage">수정</button>
+        <button class="btn btn-outline-primary" @click="goEditPage">
+          수정
+        </button>
       </div>
       <div class="col-auto">
-        <button class="btn btn-outline-danger">삭제</button>
+        <button class="btn btn-outline-danger" @click="remove">삭제</button>
       </div>
     </div>
   </div>
@@ -27,7 +29,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { getPostById } from '@/api/posts';
+import { getPostById, deletePost } from '@/api/posts';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -45,14 +47,35 @@ const router = useRouter();
  * 단) 객체 할당 불가능
  * 장) form.title, form.content
  */
-const form = ref({});
+const post = ref({});
 
-const fetchPost = () => {
-  const data = getPostById(props.id);
-  form.value = { ...data }; // ... 전개구문을 통해서 객체 복사
+const fetchPost = async () => {
+  try {
+    const { data } = await getPostById(props.id);
+    // post.value = { ...data }; // ... 전개구문을 통해서 객체 복사
+    setPost(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+const setPost = ({ title, content, createdAt }) => {
+  post.value.title = title;
+  post.value.content = content;
+  post.value.createdAt = createdAt;
 };
 fetchPost();
 
+const remove = async () => {
+  try {
+    if (confirm('삭제 하시겠습니까?') === false) {
+      return;
+    }
+    await deletePost(props.id);
+    router.push({ name: 'PostList' });
+  } catch (error) {
+    console.error(error);
+  }
+};
 const goListPage = () => {
   router.push({
     name: 'PostList',

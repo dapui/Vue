@@ -22,7 +22,7 @@
 <script setup>
 import PostItem from '@/components/posts/PostItem.vue';
 import PostDetailView from '@/views/posts/PostDetailView.vue';
-import AppCard from "@/components/AppCard.vue";
+import AppCard from '@/components/AppCard.vue';
 import { getPosts } from '@/api/posts';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -30,8 +30,23 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const posts = ref([]);
 
-const fetchPosts = () => {
-  posts.value = getPosts();
+const fetchPosts = async () => {
+  try {
+    const { data } = await getPosts();
+    posts.value = data;
+  } catch (error) {
+    console.error(error);
+  }
+
+  // console.dir(response); // 객체를 로그로 볼 때는 dir 사용
+
+  // getPosts()
+  //   .then(response => {
+  //     console.log(response);
+  //   })
+  //   .catch(error => {
+  //     console.error(error);
+  //   });
 };
 fetchPosts();
 
