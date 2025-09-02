@@ -3,9 +3,16 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
+import funcPlugins from '@/plugins/func';
+import objPlugins from '@/plugins/obj';
+import person from '@/plugins/person';
 
-createApp(App).use(router).mount('#app');
-// import 'bootstrap/dist/js/bootstrap.js';
+const app = createApp(App);
+app.use(funcPlugins);
+app.use(objPlugins, { name: 'dapui' });
+app.use(person, { name: '양갱' });
+app.use(router);
+app.mount('#app');
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // console.log('MODE', import.meta.env.MODE);
