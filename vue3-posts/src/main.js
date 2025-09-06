@@ -5,6 +5,7 @@ import App from './App.vue';
 import router from '@/router';
 import globalDirectives from '@/plugins/global-directives';
 import dayjs from '@/plugins/dayjs';
+import person from '@/plugins/person';
 // import focus from '@/directives/focus';
 // import globalComponents from '@/plugins/global-components';
 
@@ -14,6 +15,7 @@ const app = createApp(App);
 app.use(router);
 app.use(globalDirectives);
 app.use(dayjs);
+app.use(person, { name: 'dapui' });
 app.mount('#app');
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
