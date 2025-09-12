@@ -7,14 +7,23 @@ const defaultConfig = {
   method: 'get',
 };
 
-export const useAxios = (url, config = {}) => {
+const defaultOptions = {
+  immediate: true,
+};
+
+export const useAxios = (url, config = {}, options = {}) => {
   const response = ref(null);
   const data = ref(null);
   const error = ref(null);
   const loading = ref(false);
 
+  const { onSuccess, onError, immediate } = {
+    ...defaultOptions,
+    ...options,
+  };
+
   const { params } = config;
-  const excute = () => {
+  const execute = body => {
     data.value = null;
     error.value = null;
     loading.value = true;
@@ -23,13 +32,20 @@ export const useAxios = (url, config = {}) => {
       ...defaultConfig,
       ...config,
       params: unref(params),
+      data: typeof body === 'object' ? body : {},
     })
       .then(res => {
         response.value = res;
         data.value = res.data;
+        if (onSuccess) {
+          onSuccess(res);
+        }
       })
       .catch(err => {
         error.value = err;
+        if (onError) {
+          onError(err);
+        }
       })
       .finally(() => {
         loading.value = false;
@@ -37,9 +53,11 @@ export const useAxios = (url, config = {}) => {
   };
 
   if (isRef(params)) {
-    watchEffect(excute);
+    watchEffect(execute);
   } else {
-    excute();
+    if (immediate) {
+      execute();
+    }
   }
 
   return {
@@ -47,5 +65,6 @@ export const useAxios = (url, config = {}) => {
     data,
     error,
     loading,
+    execute,
   };
 };

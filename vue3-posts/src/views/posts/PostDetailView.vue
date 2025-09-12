@@ -47,52 +47,18 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { getPostById, deletePost } from '@/api/posts';
+import { deletePost } from '@/api/posts';
 import { ref } from 'vue';
 import AppError from '@/components/app/AppError.vue';
 import AppLoading from '@/components/app/AppLoading.vue';
+import { useAxios } from '@/hooks/useAxios';
 
 const props = defineProps({
   id: [String, Number],
 });
 
 const router = useRouter();
-// const id = route.params.id;
-/**
- * ref
- * 장) 객체 할당 가능, 일관성
- * 단) form.value.title, form.value.content
- *
- * reactive
- * 단) 객체 할당 불가능
- * 장) form.title, form.content
- */
-const post = ref({
-  title: null,
-  content: null,
-  createdAt: null,
-});
-const error = ref(null);
-const loading = ref(false);
-
-const fetchPost = async () => {
-  try {
-    loading.value = true;
-    const { data } = await getPostById(props.id);
-    // post.value = { ...data }; // ... 전개구문을 통해서 객체 복사
-    setPost(data);
-  } catch (err) {
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
-};
-const setPost = ({ title, content, createdAt }) => {
-  post.value.title = title;
-  post.value.content = content;
-  post.value.createdAt = createdAt;
-};
-fetchPost();
+const { error, loading, data: post } = useAxios(`/posts/${props.id}`);
 
 const removeError = ref(null);
 const removeLoading = ref(false);
