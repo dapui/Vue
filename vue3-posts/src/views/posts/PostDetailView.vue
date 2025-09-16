@@ -47,7 +47,6 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { deletePost } from '@/api/posts';
 import AppError from '@/components/app/AppError.vue';
 import AppLoading from '@/components/app/AppLoading.vue';
 import { useAxios } from '@/hooks/useAxios';
